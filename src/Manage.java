@@ -5,12 +5,12 @@ import java.awt.event.*;
 import java.sql.*;
 
 public class Manage extends JFrame implements ActionListener, MouseListener{
-    JPanel panel;
+    JPanel panel, sPanel;
     JButton addNewBtn, removeBtn, clearBtn, searchBtn, dashboardButton, overviewButton, transactionButton, mealButton, manageButton, logoutBtn;
     JLabel firstNameLabel, lastNameLabel, usernameLabel, passwordLabel, repasswordLabel, pageNameLabel, searchLabel, uLabel, fNLabel, lNLabel;
     JTextField firstNTF, lastNTF, usernameTF, searchTF;
     JPasswordField passwordF, repasswordF;
-    JComboBox selectAction;
+    JComboBox<String> selectAction;
     String actions[]=new String[2];
     Statement statement;
     int role, searchRole;
@@ -36,7 +36,18 @@ public class Manage extends JFrame implements ActionListener, MouseListener{
         panel = new JPanel();
         panel.setBackground(new Color(255,250,250));
         panel.setLayout(null);
-        this.add(panel);
+
+        sPanel = new JPanel();
+        sPanel.setBackground(new Color(255,250,250));
+        sPanel.setLayout(null);
+        
+
+        pageNameLabel=new JLabel();
+        pageNameLabel.setText("Add New Member");
+        pageNameLabel.setFont(new Font("century gothic", Font.PLAIN, 24));
+        pageNameLabel.setBounds(270, 0, 600, 40);
+        pageNameLabel.setForeground(Color.decode("#004d99"));
+        panel.add(pageNameLabel);
 
         logoutBtn=new JButton();
         logoutBtn.setText("Log Out");
@@ -94,46 +105,6 @@ public class Manage extends JFrame implements ActionListener, MouseListener{
         manageButton.addActionListener(this);
         manageButton.addMouseListener(this);
         panel.add(manageButton);
-
-        pageNameLabel=new JLabel();
-        pageNameLabel.setText("Add New Member");
-        pageNameLabel.setFont(new Font("century gothic", Font.PLAIN, 24));
-        pageNameLabel.setBounds(270, 0, 600, 40);
-        pageNameLabel.setForeground(Color.decode("#004d99"));
-        panel.add(pageNameLabel);
-
-        searchLabel=new JLabel("Search By Username:");
-        searchLabel.setBounds(270, 80, 200, 25);
-        searchLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
-        searchLabel.setForeground(Color.decode("#003366"));
-        panel.add(searchLabel);
-        searchLabel.setVisible(false);
-
-        searchTF=new JTextField();
-        searchTF.setBounds(270, 110, 200, 25);
-        panel.add(searchTF);
-        searchTF.setVisible(false);
-
-        uLabel=new JLabel("Username: "+ user);
-        uLabel.setBounds(270, 140, 400, 25);
-        uLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
-        uLabel.setForeground(Color.decode("#003366"));
-        panel.add(uLabel);
-        uLabel.setVisible(false);
-
-        fNLabel=new JLabel("First Name: "+ firstname);
-        fNLabel.setBounds(270, 170, 400, 25);
-        fNLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
-        fNLabel.setForeground(Color.decode("#003366"));
-        panel.add(fNLabel);
-        fNLabel.setVisible(false);
-
-        lNLabel=new JLabel("Last Name: "+ lastname);
-        lNLabel.setBounds(270, 200, 400, 25);
-        lNLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
-        lNLabel.setForeground(Color.decode("#003366"));
-        panel.add(lNLabel);
-        lNLabel.setVisible(false);
 
         firstNameLabel = new JLabel("First Name:");
         firstNameLabel.setBounds(270, 70, 100, 25);
@@ -235,19 +206,11 @@ public class Manage extends JFrame implements ActionListener, MouseListener{
         clearBtn.setVisible(false);
         clearBtn.setEnabled(false);
 
-        searchBtn=new JButton("Search");
-        searchBtn.setBounds(480, 110, 90, 25);
-        searchBtn.setFont(new Font("century gothic", Font.PLAIN, 16));
-        searchBtn.setForeground(Color.decode("#003366"));
-        searchBtn.setBackground(Color.decode("#cce6ff"));
-        searchBtn.addActionListener(this);
-        searchBtn.addMouseListener(this);
-        panel.add(searchBtn);
-        searchBtn.setVisible(false);
+        
 
         actions[0]="Add New Member";
         actions[1]="Remove Member";
-        selectAction=new JComboBox(actions);
+        selectAction=new JComboBox<String>(actions);
         selectAction.setBounds(550, 40, 140, 25);
         selectAction.setFont(new Font("century gothic", Font.PLAIN, 12));
         selectAction.setForeground(Color.decode("#003366"));
@@ -255,6 +218,52 @@ public class Manage extends JFrame implements ActionListener, MouseListener{
         selectAction.addActionListener(this);
         selectAction.addMouseListener(this);
         panel.add(selectAction);
+
+        searchLabel=new JLabel("Search By Username:");
+        searchLabel.setBounds(270, 80, 200, 25);
+        searchLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
+        searchLabel.setForeground(Color.decode("#003366"));
+        searchLabel.setVisible(false);
+        panel.add(searchLabel);
+
+        searchTF=new JTextField();
+        searchTF.setBounds(270, 110, 200, 25);
+        searchTF.setVisible(false);
+        panel.add(searchTF);
+
+        searchBtn=new JButton("Search");
+        searchBtn.setBounds(480, 110, 90, 25);
+        searchBtn.setFont(new Font("century gothic", Font.PLAIN, 16));
+        searchBtn.setForeground(Color.decode("#003366"));
+        searchBtn.setBackground(Color.decode("#cce6ff"));
+        searchBtn.addActionListener(this);
+        searchBtn.addMouseListener(this);
+        searchBtn.setVisible(false);
+        panel.add(searchBtn);
+
+        uLabel=new JLabel("Username: "+ user);
+        uLabel.setBounds(270, 140, 400, 25);
+        uLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
+        uLabel.setForeground(Color.decode("#003366"));
+        uLabel.setVisible(false);
+        panel.add(uLabel);
+
+        fNLabel=new JLabel("First Name: "+ firstname);
+        fNLabel.setBounds(270, 170, 400, 25);
+        fNLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
+        fNLabel.setForeground(Color.decode("#003366"));
+        fNLabel.setVisible(false);
+        panel.add(fNLabel);
+
+        lNLabel=new JLabel("Last Name: "+ lastname);
+        lNLabel.setBounds(270, 200, 400, 25);
+        lNLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
+        lNLabel.setForeground(Color.decode("#003366"));
+        lNLabel.setVisible(false);
+        panel.add(lNLabel);
+
+        
+        this.add(panel);
     }
 
     private void optionOneElements(){
@@ -281,6 +290,7 @@ public class Manage extends JFrame implements ActionListener, MouseListener{
         removeBtn.setVisible(false);
         clearBtn.setVisible(false);
         searchBtn.setVisible(false);
+
     }
 
     private void optionTwoElements(){
@@ -307,6 +317,7 @@ public class Manage extends JFrame implements ActionListener, MouseListener{
         removeBtn.setVisible(true);
         clearBtn.setVisible(true);
         searchBtn.setVisible(true);
+        
     }
 
     @Override

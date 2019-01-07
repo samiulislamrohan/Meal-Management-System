@@ -3,13 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-<<<<<<< HEAD
-import java.util.*;
-=======
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
->>>>>>> update
 
 public class TransactionHistory extends JFrame implements ActionListener, MouseListener{
     JPanel panel;
@@ -244,12 +239,13 @@ public class TransactionHistory extends JFrame implements ActionListener, MouseL
     void retriveData(){
         double payment = 0;
         double marketCost = 0;
-<<<<<<< HEAD
-=======
-        String month = new SimpleDateFormat("yyyy-MM-%").format(new Date());
-        //String dataQuery = "SELECT  Date, Payment, MarketCost FROM balance WHERE Username='"+username+"' AND Date LIKE '"+month+"';";
->>>>>>> update
-        String dataQuery = "SELECT  Date, Payment, MarketCost FROM balance WHERE Username='"+username+"';";
+
+        int year = new Date().getYear() + 1900;
+        int month = new Date().getMonth() + 1;
+        String fromDate = ""+  year + "-" + month + "-1" ;
+        String toDate = ""+  year + "-" + month + "-31" ;
+
+        String dataQuery = "SELECT  Date, Payment, MarketCost FROM balance WHERE (Date BETWEEN '"+ fromDate + "' AND '" + toDate+ "') AND Username='"+username+"';";
         try{
             ResultSet dataResultSet =  statement.executeQuery(dataQuery);
             ResultSetMetaData resultSetMetaData = dataResultSet.getMetaData();

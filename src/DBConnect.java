@@ -1,13 +1,21 @@
 package src;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 
 public class DBConnect{
+
+    static int year;
+    static int month;
+    static String fromDate;
+    static String toDate;
 
     public static Statement getStatement(Login obj){
         Connection connection = null;
         Statement statement = null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://204.9.187.45:3306/heapneverflow_java", "heapneverflow_java", "Unlock1998");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/java", "root", "");
             statement = connection.createStatement();
             obj.errorLabel.setText("");
         }
@@ -26,7 +34,7 @@ public class DBConnect{
         Connection connection = null;
         Statement statement = null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://204.9.187.45:3306/heapneverflow_java", "heapneverflow_java", "Unlock1998");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/java", "root", "");
             statement = connection.createStatement();
             obj.errorLabel.setText("");
         }
@@ -44,7 +52,7 @@ public class DBConnect{
         Connection connection = null;
         Statement statement = null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://204.9.187.45:3306/heapneverflow_java", "heapneverflow_java", "Unlock1998");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/java", "root", "");
             statement = connection.createStatement();
             obj.messageLabel.setText("");
         }
@@ -55,6 +63,13 @@ public class DBConnect{
             }
         }
         return statement;
+    }
+
+    static void getDate(){
+        year = new Date().getYear() + 1900;
+        month = new Date().getMonth() + 1;
+        fromDate = ""+  year + "-" + month + "-1" ;
+        toDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     }
     
 }

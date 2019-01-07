@@ -1,31 +1,10 @@
 package src;
-<<<<<<< HEAD
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
-=======
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
->>>>>>> update
 
 public class Overview extends JFrame implements ActionListener, MouseListener{
     JPanel panel;
@@ -249,11 +228,11 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
     void retriveData(){
         int totalMealCount = 0;
         Double totalCostCount = 0.0;
-<<<<<<< HEAD
 
-=======
-        String month = new SimpleDateFormat("yyyy-MM-%").format(new Date());
->>>>>>> update
+        int year = new Date().getYear() + 1900;
+        int month = new Date().getMonth() + 1;
+        String fromDate = ""+  year + "-" + month + "-1" ;
+        String toDate = ""+  year + "-" + month + "-31" ;
         String userQuery = "SELECT  Username from account WHERE Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
         
         try{
@@ -279,12 +258,8 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
             data = new Vector<Vector<String>>();
             int i;
             for(i=0;i<userName.size();i++){
-<<<<<<< HEAD
-                String totalMealQuery = "SELECT SUM(TotalMeal) Meal FROM meal WHERE Username ='"+userName.get(i)+"';";
-=======
-                String totalMealQuery = "SELECT SUM(TotalMeal) Meal FROM meal WHERE Username ='"+userName.get(i)+"' ;";
->>>>>>> update
-                String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE Username ='"+userName.get(i)+"';";
+                String totalMealQuery = "SELECT SUM(TotalMeal) Meal FROM meal WHERE (Date BETWEEN '"+ fromDate + "' AND '" + toDate+ "') AND Username ='"+userName.get(i)+"';";
+                String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ fromDate + "' AND '" + toDate+ "') AND Username ='"+userName.get(i)+"';";
 
                 ResultSet totalMealResultSet = statement.executeQuery(totalMealQuery);
                 

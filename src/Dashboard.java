@@ -328,10 +328,12 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
     }
 
     double getBalance(){
-        String mealQuery = "SELECT SUM(TotalMeal) TotalMeal FROM meal WHERE Username='"+username+"';";
-        String costQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE Username='"+username+"';";
-        String totalMealQuery = "SELECT SUM(TotalMeal) TotalMeal FROM meal WHERE Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
-        String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
+        //Generate Year, Month-->
+        DBConnect.getDate();
+        String mealQuery = "SELECT SUM(TotalMeal) TotalMeal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
+        String costQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
+        String totalMealQuery = "SELECT SUM(TotalMeal) TotalMeal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
+        String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
         try{
             ResultSet mealResultSet =  statement.executeQuery(mealQuery);
             if(mealResultSet.next()){

@@ -1,32 +1,11 @@
 package src;
-<<<<<<< HEAD
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
-=======
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
->>>>>>> update
+import java.util.Calendar;
 
 public class MealHistory extends JFrame implements ActionListener, MouseListener{
     JPanel panel;
@@ -268,11 +247,8 @@ public class MealHistory extends JFrame implements ActionListener, MouseListener
 
     void retriveData(){
         int mealCount = 0;
-<<<<<<< HEAD
-=======
-        String month = new SimpleDateFormat("yyyy-MM-%").format(new Date());
->>>>>>> update
-        String dataQuery = "SELECT  Date, TotalMeal FROM meal WHERE Username='"+username+"';";
+
+        String dataQuery = "SELECT  Date, TotalMeal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
         try{
             ResultSet dataResultSet =  statement.executeQuery(dataQuery);
             ResultSetMetaData resultSetMetaData = dataResultSet.getMetaData();
