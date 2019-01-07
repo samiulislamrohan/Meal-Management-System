@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Main",
+            "request": "launch",
+            "mainClass": "src.Main",
+<<<<<<< HEAD
+            "projectName": "Meal Management_b873245"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Main",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "Main",
+            "args": ""
+=======
+            "classPaths": [""],
+            "projectName": "Meal Management_b873245"
+>>>>>>> update
+        }
+    ]
+}
