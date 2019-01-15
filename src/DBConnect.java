@@ -1,7 +1,6 @@
 package src;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Date;
 
 public class DBConnect{
@@ -15,7 +14,7 @@ public class DBConnect{
         Connection connection = null;
         Statement statement = null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/java", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://remotemysql.com/K6ev8vMSS3", "K6ev8vMSS3", "IMvVX1GQSU");
             statement = connection.createStatement();
             obj.errorLabel.setText("");
         }
@@ -34,7 +33,7 @@ public class DBConnect{
         Connection connection = null;
         Statement statement = null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/java", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://remotemysql.com/K6ev8vMSS3", "K6ev8vMSS3", "IMvVX1GQSU");
             statement = connection.createStatement();
             obj.errorLabel.setText("");
         }
@@ -52,7 +51,7 @@ public class DBConnect{
         Connection connection = null;
         Statement statement = null;
         try{
-            connection = DriverManager.getConnection("jdbc:mysql://localhost/java", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://remotemysql.com/K6ev8vMSS3", "K6ev8vMSS3", "IMvVX1GQSU");
             statement = connection.createStatement();
             obj.messageLabel.setText("");
         }

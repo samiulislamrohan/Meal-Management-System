@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
-import java.util.Calendar;
 
 public class MealHistory extends JFrame implements ActionListener, MouseListener{
     JPanel panel;

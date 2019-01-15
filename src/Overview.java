@@ -229,10 +229,6 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
         int totalMealCount = 0;
         Double totalCostCount = 0.0;
 
-        int year = new Date().getYear() + 1900;
-        int month = new Date().getMonth() + 1;
-        String fromDate = ""+  year + "-" + month + "-1" ;
-        String toDate = ""+  year + "-" + month + "-31" ;
         String userQuery = "SELECT  Username from account WHERE Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
         
         try{
@@ -258,8 +254,8 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
             data = new Vector<Vector<String>>();
             int i;
             for(i=0;i<userName.size();i++){
-                String totalMealQuery = "SELECT SUM(TotalMeal) Meal FROM meal WHERE (Date BETWEEN '"+ fromDate + "' AND '" + toDate+ "') AND Username ='"+userName.get(i)+"';";
-                String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ fromDate + "' AND '" + toDate+ "') AND Username ='"+userName.get(i)+"';";
+                String totalMealQuery = "SELECT SUM(TotalMeal) Meal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username ='"+userName.get(i)+"';";
+                String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username ='"+userName.get(i)+"';";
 
                 ResultSet totalMealResultSet = statement.executeQuery(totalMealQuery);
                 

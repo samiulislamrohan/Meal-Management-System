@@ -126,6 +126,19 @@ public class Login extends JFrame implements ActionListener, MouseListener{
 
                     if(password.equals(new String(passwordF.getPassword()))){
                         new Dashboard(username, name, statement, role);
+
+                        Overview overview = new Overview(username, name, statement, role);
+                        overview.setVisible(false);
+                        ObjectRefer.setOverview(overview);
+
+                        TransactionHistory transactionHistory = new TransactionHistory(username, name, statement, role);
+                        transactionHistory.setVisible(false);
+                        ObjectRefer.setTransactionHistory(transactionHistory);
+
+                        MealHistory mealHistory = new MealHistory(username, name, statement, role);
+                        mealHistory.setVisible(false);
+                        ObjectRefer.setMealHistory(mealHistory);
+                        
                         this.dispose();
                     }
                     else{

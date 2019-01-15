@@ -261,6 +261,10 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
 
                 messageLabel.setText("Data successfully submitted!");
 
+                Overview overview = new Overview(username, name, statement, role);
+                overview.setVisible(false);
+                ObjectRefer.setOverview(overview);
+                
                 TransactionHistory transactionHistory = new TransactionHistory(username, name, statement, role);
                 transactionHistory.setVisible(false);
                 ObjectRefer.setTransactionHistory(transactionHistory);

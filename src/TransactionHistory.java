@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 public class TransactionHistory extends JFrame implements ActionListener, MouseListener{
     JPanel panel;
@@ -240,12 +239,7 @@ public class TransactionHistory extends JFrame implements ActionListener, MouseL
         double payment = 0;
         double marketCost = 0;
 
-        int year = new Date().getYear() + 1900;
-        int month = new Date().getMonth() + 1;
-        String fromDate = ""+  year + "-" + month + "-1" ;
-        String toDate = ""+  year + "-" + month + "-31" ;
-
-        String dataQuery = "SELECT  Date, Payment, MarketCost FROM balance WHERE (Date BETWEEN '"+ fromDate + "' AND '" + toDate+ "') AND Username='"+username+"';";
+        String dataQuery = "SELECT  Date, Payment, MarketCost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
         try{
             ResultSet dataResultSet =  statement.executeQuery(dataQuery);
             ResultSetMetaData resultSetMetaData = dataResultSet.getMetaData();
