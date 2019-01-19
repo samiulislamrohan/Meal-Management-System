@@ -1,14 +1,7 @@
 package src;
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class DBConnect{
-
-    static int year;
-    static int month;
-    static String fromDate;
-    static String toDate;
 
     public static Statement getStatement(Login obj){
         Connection connection = null;
@@ -62,13 +55,6 @@ public class DBConnect{
             }
         }
         return statement;
-    }
-
-    static void getDate(){
-        year = new Date().getYear() + 1900;
-        month = new Date().getMonth() + 1;
-        fromDate = ""+  year + "-" + month + "-1" ;
-        toDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-    }
+    } 
     
 }

@@ -9,7 +9,9 @@
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "src.Main",
-            "classPaths": [""]
+            "classPaths": [
+                ""
+            ]
         }
     ]
 }

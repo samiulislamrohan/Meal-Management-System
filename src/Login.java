@@ -149,7 +149,7 @@ public class Login extends JFrame implements ActionListener, MouseListener{
                     JOptionPane.showMessageDialog(this, "Invalid username");
                 }
             }catch(Exception ex){
-                System.out.println("Exception: " + ex.getMessage());
+                System.out.println("Login Exception: " + ex.getMessage());
             }
         }
     }

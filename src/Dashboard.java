@@ -161,7 +161,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
         editBtn.addActionListener(this);
         panel.add(editBtn);
 
-        balance = getBalance();
+        balance = Activity.getBalance(username, statement);
         balanceLabel = new JLabel("Balance: " + balance);
         balanceLabel.setBounds(260, 200, 200, 30);
         balanceLabel.setFont(new Font("century gothic", Font.PLAIN, 20));
@@ -318,7 +318,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
             }
 
             if(checkStatement)
-                balance = getBalance();
+                balance = Activity.getBalance(username, statement);
             balanceLabel.setText("Balance: "+ balance);
         }
         else if(e.getSource() == editBtn){
@@ -329,42 +329,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
             editBtn.setVisible(false);
             submitBtn.setVisible(true);
         }
-    }
-
-    double getBalance(){
-        //Generate Year, Month-->
-        DBConnect.getDate();
-        String mealQuery = "SELECT SUM(TotalMeal) TotalMeal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
-        String costQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
-        String totalMealQuery = "SELECT SUM(TotalMeal) TotalMeal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
-        String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
-        try{
-            ResultSet mealResultSet =  statement.executeQuery(mealQuery);
-            if(mealResultSet.next()){
-                personMeal = Double.parseDouble(mealResultSet.getString("TotalMeal"));
-            }
-
-            ResultSet totalMealResultSet = statement.executeQuery(totalMealQuery);
-            if(totalMealResultSet.next()){
-                totalMeal = Double.parseDouble(totalMealResultSet.getString("TotalMeal"));
-            }
-
-            ResultSet costResultSet = statement.executeQuery(costQuery);
-            if(costResultSet.next()){
-                cost = Double.parseDouble(costResultSet.getString("Cost"));
-            }
-
-            ResultSet totalCostResultSet = statement.executeQuery(totalCostQuery);
-            if(totalCostResultSet.next()){
-                totalBalance = Double.parseDouble(totalCostResultSet.getString("Cost"));
-            }
-
-            return cost - ((totalBalance/totalMeal)*personMeal);
-
-        }catch(Exception ae){
-            System.out.println("getBalance Exception: " + ae.getMessage());
-        }
-        return balance;
     }
 
     boolean checkInputStatus(){

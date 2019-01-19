@@ -246,7 +246,7 @@ public class MealHistory extends JFrame implements ActionListener, MouseListener
     void retriveData(){
         int mealCount = 0;
 
-        String dataQuery = "SELECT  Date, TotalMeal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
+        String dataQuery = "SELECT  Date, TotalMeal FROM meal WHERE (Date BETWEEN '"+ Activity.fromDate + "' AND '" + Activity.toDate+ "') AND Username='"+username+"';";
         try{
             ResultSet dataResultSet =  statement.executeQuery(dataQuery);
             ResultSetMetaData resultSetMetaData = dataResultSet.getMetaData();

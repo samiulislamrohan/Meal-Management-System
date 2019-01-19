@@ -239,7 +239,7 @@ public class TransactionHistory extends JFrame implements ActionListener, MouseL
         double payment = 0;
         double marketCost = 0;
 
-        String dataQuery = "SELECT  Date, Payment, MarketCost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username='"+username+"';";
+        String dataQuery = "SELECT  Date, Payment, MarketCost FROM balance WHERE (Date BETWEEN '"+ Activity.fromDate + "' AND '" + Activity.toDate+ "') AND Username='"+username+"';";
         try{
             ResultSet dataResultSet =  statement.executeQuery(dataQuery);
             ResultSetMetaData resultSetMetaData = dataResultSet.getMetaData();

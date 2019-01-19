@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 public class Overview extends JFrame implements ActionListener, MouseListener{
     JPanel panel;
@@ -103,7 +102,7 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
         logoutBtn.addActionListener(this);
         panel.add(logoutBtn);
 
-        retriveData();
+        retrieveData();
 
         table = new JTable(data, column);
         table.setEnabled(false);
@@ -225,16 +224,19 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
         
     }
 
-    void retriveData(){
+    void retrieveData(){
         int totalMealCount = 0;
         Double totalCostCount = 0.0;
 
+        //Retrieving UserName Query
         String userQuery = "SELECT  Username from account WHERE Username IN (SELECT Username FROM account WHERE Suser IN (SELECT Suser FROM account WHERE Username='"+username+"'));";
         
         try{
+            //Retrieving UserName
             ResultSet userResultSet =  statement.executeQuery(userQuery);
 
             int rowCount=0;
+            //Counting total number of row
             if(userResultSet.last()){
                 rowCount = userResultSet.getRow();
                 userResultSet.beforeFirst();
@@ -247,25 +249,27 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
 
             column = new Vector<String>();
             column.add("Name");
-            column.add("TotalMeal");
-            column.add("TotalCost");
+            column.add("Total Meal");
+            column.add("Total Cost");
+            column.add("Balance");
 
             row = (Vector<String>[]) new Vector[rowCount+1];
+            int PerMealCount[] = new int[rowCount+1];
+
             data = new Vector<Vector<String>>();
             int i;
             for(i=0;i<userName.size();i++){
-                String totalMealQuery = "SELECT SUM(TotalMeal) Meal FROM meal WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username ='"+userName.get(i)+"';";
-                String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ DBConnect.fromDate + "' AND '" + DBConnect.toDate+ "') AND Username ='"+userName.get(i)+"';";
-
-                ResultSet totalMealResultSet = statement.executeQuery(totalMealQuery);
-                
+                String totalMealQuery = "SELECT SUM(TotalMeal) Meal FROM meal WHERE (Date BETWEEN '"+ Activity.fromDate + "' AND '" + Activity.toDate+ "') AND Username ='"+userName.get(i)+"';";
+                String totalCostQuery = "SELECT SUM(Payment)+SUM(MarketCost) Cost FROM balance WHERE (Date BETWEEN '"+ Activity.fromDate + "' AND '" + Activity.toDate+ "') AND Username ='"+userName.get(i)+"';";
                 
                 row[i] = new Vector<String>();
                 row[i].add(userName.get(i));
 
+                ResultSet totalMealResultSet = statement.executeQuery(totalMealQuery);
                 if(totalMealResultSet.next()){
                     row[i].add(totalMealResultSet.getString("Meal"));
-                    totalMealCount += totalMealResultSet.getInt("Meal");
+                    PerMealCount[i] = totalMealResultSet.getInt("Meal");
+                    totalMealCount += PerMealCount[i];
                 }
 
                 ResultSet totalCostResultSet = statement.executeQuery(totalCostQuery);
@@ -274,8 +278,14 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
                     totalCostCount += totalCostResultSet.getDouble("Cost");
                 }
 
+                row[i].add(String.valueOf(Activity.getBalance(userName.get(i), statement)));
+
                 data.add(row[i]);
                 
+            }
+            for(i=0;i<userName.size();i++){
+                Double perMealCost = totalCostCount/totalMealCount;
+                row[i].add(String.valueOf(perMealCost*PerMealCount[i]));
             }
             
             row[i] = new Vector<String>();
