@@ -86,7 +86,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
         dashboardLabel.setForeground(Color.decode("#004d99"));
         panel.add(dashboardLabel);
 
-        messageLabel = new JLabel("");
+        messageLabel = new JLabel("Please wait! While syncing your data");
         messageLabel.setBounds(275, 70, 500, 20);
         messageLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
         messageLabel.setForeground(Color.red);
@@ -161,7 +161,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
         editBtn.addActionListener(this);
         panel.add(editBtn);
 
-        balance = Activity.getBalance(username, statement);
         balanceLabel = new JLabel("Balance: " + balance);
         balanceLabel.setBounds(260, 200, 200, 30);
         balanceLabel.setFont(new Font("century gothic", Font.PLAIN, 20));
@@ -261,17 +260,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
 
                 messageLabel.setText("Data successfully submitted!");
 
-                Overview overview = new Overview(username, name, statement, role);
-                overview.setVisible(false);
-                ObjectRefer.setOverview(overview);
-                
-                TransactionHistory transactionHistory = new TransactionHistory(username, name, statement, role);
-                transactionHistory.setVisible(false);
-                ObjectRefer.setTransactionHistory(transactionHistory);
-
-                MealHistory mealHistory = new MealHistory(username, name, statement, role);
-                mealHistory.setVisible(false);
-                ObjectRefer.setMealHistory(mealHistory);
+                sync();
                 
             }catch(Exception ae){
                 if(ae.getMessage().contains("Duplicate entry")){
@@ -288,17 +277,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
 
                         messageLabel.setText("Data successfully updated!");
 
-                        Overview overview = new Overview(username, name, statement, role);
-                        overview.setVisible(false);
-                        ObjectRefer.setOverview(overview);
-
-                        TransactionHistory transactionHistory = new TransactionHistory(username, name, statement, role);
-                        transactionHistory.setVisible(false);
-                        ObjectRefer.setTransactionHistory(transactionHistory);
-
-                        MealHistory mealHistory = new MealHistory(username, name, statement, role);
-                        mealHistory.setVisible(false);
-                        ObjectRefer.setMealHistory(mealHistory);
+                        sync();
 
                     }catch(Exception iae){
                         System.out.println(iae.getMessage());
@@ -454,5 +433,31 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         
+    }
+
+    void sync(){
+        syncData sync = new syncData();
+        sync.execute();
+    }
+
+    private class syncData extends SwingWorker<Object, String>{
+        @Override
+        protected Object doInBackground() throws Exception {
+            Activity.getDate();
+            balanceLabel.setText("Balance: " + Activity.getBalance(username, statement));
+            Overview overview = new Overview(username, name, statement, role);
+            overview.setVisible(false);
+            ObjectRefer.setOverview(overview);
+            TransactionHistory transactionHistory = new TransactionHistory(username, name, statement, role);
+            transactionHistory.setVisible(false);
+            ObjectRefer.setTransactionHistory(transactionHistory);
+            MealHistory mealHistory = new MealHistory(username, name, statement, role);
+            mealHistory.setVisible(false);
+            ObjectRefer.setMealHistory(mealHistory);
+            messageLabel.setText("Data successfully synced!");
+            Thread.sleep(2000);
+            messageLabel.setText("");
+            return null;
+        }
     }
 }

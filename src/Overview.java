@@ -235,12 +235,8 @@ public class Overview extends JFrame implements ActionListener, MouseListener{
             //Retrieving UserName
             ResultSet userResultSet =  statement.executeQuery(userQuery);
 
-            int rowCount=0;
-            //Counting total number of row
-            if(userResultSet.last()){
-                rowCount = userResultSet.getRow();
-                userResultSet.beforeFirst();
-            }
+            int rowCount=Activity.countRow(userResultSet);
+
             Vector <String> userName = new Vector<String>();
             while(userResultSet.next()){
                 userName.add(userResultSet.getString("Username"));

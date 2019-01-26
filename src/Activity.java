@@ -1,5 +1,4 @@
 package src;
-
 import java.util.*;
 import java.util.Date;
 import java.sql.*;
@@ -9,8 +8,13 @@ public class Activity{
     static int month;
     static String fromDate;
     static String toDate;
-    static Statement statement;
 
+    static Statement statement;
+    static  ResultSet resultSet;
+
+    /**
+     * Generate Current Month, Year
+     */
     static void getDate(){
         year = Calendar.getInstance().get(Calendar.YEAR);
         month = Calendar.getInstance().get(Calendar.MONTH) + 1;
@@ -18,8 +22,10 @@ public class Activity{
         toDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     }
 
+    /**
+     * Retrieve individual user balance
+     */
     static double getBalance(String username, Statement statement){
-        Activity.getDate();
         Double personMeal = 0.0;
         Double totalMeal = 0.0;
         Double cost = 0.0;
@@ -59,4 +65,19 @@ public class Activity{
 
         return 0.0;
     }
+
+    static int countRow(ResultSet resultSet){
+        int rowCount=0;
+        try{
+            if(resultSet.last()){
+                rowCount = resultSet.getRow();
+                resultSet.beforeFirst();
+            }
+        }catch(Exception ae){
+            System.out.println("countRow Exception: " + ae.getMessage());
+        }
+        return rowCount;
+    }
+
+
 }

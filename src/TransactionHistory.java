@@ -6,14 +6,13 @@ import java.sql.*;
 import java.util.*;
 
 public class TransactionHistory extends JFrame implements ActionListener, MouseListener{
-    JPanel panel;
-    JLabel transactionLabel , messageLabel;
-    JButton logoutBtn, dashboardButton, transactionButton, mealButton, manageButton, overviewButton;
-    JTable table;
-    JScrollPane scrollPane;
+    private JPanel panel;
+    private JLabel transactionLabel , messageLabel;
+    private JButton logoutBtn, dashboardButton, transactionButton, mealButton, manageButton, overviewButton;
+    private JTable table;
+    private JScrollPane scrollPane;
     String username, name;
     Statement statement;
-    Dashboard dashboard;
     Vector <String> column, row[];
     Vector <Vector<String>> data;
     int role;
@@ -102,7 +101,7 @@ public class TransactionHistory extends JFrame implements ActionListener, MouseL
         logoutBtn.addActionListener(this);
         panel.add(logoutBtn);
 
-        retriveData();
+        retrieveData();
 
         table = new JTable(data, column);
         table.setEnabled(false);
@@ -235,7 +234,7 @@ public class TransactionHistory extends JFrame implements ActionListener, MouseL
         
     }
 
-    void retriveData(){
+    void retrieveData(){
         double payment = 0;
         double marketCost = 0;
 
@@ -244,11 +243,8 @@ public class TransactionHistory extends JFrame implements ActionListener, MouseL
             ResultSet dataResultSet =  statement.executeQuery(dataQuery);
             ResultSetMetaData resultSetMetaData = dataResultSet.getMetaData();
 
-            int rowCount=0;
-            if(dataResultSet.last()){
-                rowCount = dataResultSet.getRow();
-                dataResultSet.beforeFirst();
-            }
+            int rowCount=Activity.countRow(dataResultSet);
+
             column = new Vector<String>();
             row = (Vector<String>[]) new Vector[rowCount+1];
             data = new Vector<Vector<String>>();
@@ -276,7 +272,7 @@ public class TransactionHistory extends JFrame implements ActionListener, MouseL
             data.add(row[index]);
     
         }catch(Exception ae){
-            System.out.println("retriveData Exception: " + ae.getMessage());
+            System.out.println("retrieveData Exception: " + ae.getMessage());
         }
     }
 

@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class Login extends JFrame implements ActionListener, MouseListener{
     JPanel panel;
-    JLabel usernameLabel, passwordLabel, applicationNameLabel, registerMessageLabel, errorLabel;
+    JLabel usernameLabel, passwordLabel, applicationNameLabel, registerMessageLabel, messageLabel;
     JTextField usernameTF;
     JPasswordField passwordF;
     JButton loginBtn, registerBtn, exitBtn;
@@ -30,11 +30,11 @@ public class Login extends JFrame implements ActionListener, MouseListener{
         applicationNameLabel.setForeground(Color.decode("#004d99"));
         panel.add(applicationNameLabel);
 
-        errorLabel = new JLabel();
-        errorLabel.setBounds(100, 80, 500, 30);
-        errorLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
-        errorLabel.setForeground(Color.red);
-        panel.add(errorLabel);
+        messageLabel = new JLabel("", SwingConstants.CENTER);
+        messageLabel.setBounds(50, 80, 500, 30);
+        messageLabel.setFont(new Font("century gothic", Font.PLAIN, 16));
+        messageLabel.setForeground(Color.red);
+        panel.add(messageLabel);
 
         usernameLabel = new JLabel("Username:");
         usernameLabel.setBounds(160, 120, 120, 30);
@@ -105,54 +105,10 @@ public class Login extends JFrame implements ActionListener, MouseListener{
             this.dispose();
         }
         if(e.getSource()==loginBtn){
-
-            
-            try{
-                String query = "SELECT * FROM account WHERE Username='" +usernameTF.getText()+ "';";
-                
-                statement = DBConnect.getStatement(this);
-                ResultSet rs = statement.executeQuery(query);
-
-                String username=null;
-                String password=null;
-                String name=null;
-                int role = 0;
-                
-                if(rs.next()){
-                    username = rs.getString("Username");
-                    password = rs.getString("Password");
-                    name = rs.getString("FirstName");
-                    role = Integer.parseInt(rs.getString("Role"));
-
-                    if(password.equals(new String(passwordF.getPassword()))){
-                        new Dashboard(username, name, statement, role);
-
-                        Overview overview = new Overview(username, name, statement, role);
-                        overview.setVisible(false);
-                        ObjectRefer.setOverview(overview);
-
-                        TransactionHistory transactionHistory = new TransactionHistory(username, name, statement, role);
-                        transactionHistory.setVisible(false);
-                        ObjectRefer.setTransactionHistory(transactionHistory);
-
-                        MealHistory mealHistory = new MealHistory(username, name, statement, role);
-                        mealHistory.setVisible(false);
-                        ObjectRefer.setMealHistory(mealHistory);
-                        
-                        this.dispose();
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(this, "Invalid password");
-                    }
-                }
-                else{
-                    JOptionPane.showMessageDialog(this, "Invalid username");
-                }
-            }catch(Exception ex){
-                System.out.println("Login Exception: " + ex.getMessage());
-            }
+            check();
         }
     }
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -203,5 +159,68 @@ public class Login extends JFrame implements ActionListener, MouseListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         
+    }
+
+    private void check(){
+        messageLabel.setText("Please wait! while checking your credentials");
+        checkLogin check = new checkLogin(this);
+        loginBtn.setEnabled(false);
+        registerBtn.setEnabled(false);
+        check.execute();
+    }
+
+    private  class checkLogin extends SwingWorker<Object, String>{
+        Login login;
+        checkLogin(Login login){
+            this.login = login;
+        }
+        @Override
+        protected Object doInBackground() throws Exception {
+            try{
+                String query = "SELECT * FROM account WHERE Username='" +usernameTF.getText()+ "';";
+
+                statement = DBConnect.getStatement(login);
+                ResultSet rs = statement.executeQuery(query);
+
+                String username;
+                String password;
+                String name;
+                int role;
+
+                if(rs.next()){
+                    username = rs.getString("Username");
+                    password = rs.getString("Password");
+                    name = rs.getString("FirstName");
+                    role = Integer.parseInt(rs.getString("Role"));
+
+                    if(password.equals(new String(passwordF.getPassword()))){
+                        Dashboard dashboard = new Dashboard(username, name, statement, role);
+                        dashboard.sync();
+
+                        login.dispose();
+                    }
+                    else{
+                        messageLabel.setText("Invalid password");
+                        enableButton();
+                        Thread.sleep(2000);
+                        messageLabel.setText("");
+                    }
+                }
+                else{
+                    messageLabel.setText("Invalid username");
+                    enableButton();
+                    Thread.sleep(2000);
+                    messageLabel.setText("");
+                }
+            }catch(Exception ex){
+                System.out.println("Login Exception: " + ex.getMessage());
+            }
+            return null;
+        }
+    }
+
+    void enableButton(){
+        loginBtn.setEnabled(true);
+        registerBtn.setEnabled(true);
     }
 }

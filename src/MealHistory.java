@@ -13,7 +13,6 @@ public class MealHistory extends JFrame implements ActionListener, MouseListener
     JScrollPane scrollPane;
     String username, name;
     Statement statement;
-    Dashboard dashboard;
     Vector <String> column, row[];
     Vector <Vector<String>> data;
     int role;
@@ -251,14 +250,12 @@ public class MealHistory extends JFrame implements ActionListener, MouseListener
             ResultSet dataResultSet =  statement.executeQuery(dataQuery);
             ResultSetMetaData resultSetMetaData = dataResultSet.getMetaData();
 
-            int rowCount=0;
-            if(dataResultSet.last()){
-                rowCount = dataResultSet.getRow();
-                dataResultSet.beforeFirst();
-            }
+            int rowCount=Activity.countRow(dataResultSet);
+
             column = new Vector<String>();
             row = (Vector<String>[]) new Vector[rowCount+1];
             data = new Vector<Vector<String>>();
+            Vector<Vector<String>> s = new Vector<Vector<String>>();
 
 
             for(int i=1;i<=resultSetMetaData.getColumnCount();i++){
@@ -280,7 +277,7 @@ public class MealHistory extends JFrame implements ActionListener, MouseListener
             data.add(row[index]);
 
         }catch(Exception ae){
-            System.out.println("retriveData Exception: " + ae.getMessage());
+            System.out.println("retrieveData Exception: " + ae.getMessage());
         }
     }
 }

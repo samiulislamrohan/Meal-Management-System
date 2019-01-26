@@ -9,13 +9,14 @@ public class DBConnect{
         try{
             connection = DriverManager.getConnection("jdbc:mysql://remotemysql.com/K6ev8vMSS3", "K6ev8vMSS3", "IMvVX1GQSU");
             statement = connection.createStatement();
-            obj.errorLabel.setText("");
+            obj.messageLabel.setText("");
         }
         
         catch(Exception e){
             System.out.println(e.getMessage());
             if(e.getMessage().contains("Communications link failure")){
-                obj.errorLabel.setText("Internet connection failure, check internet connection");
+                obj.messageLabel.setText("Internet connection failure, check internet connection");
+                obj.enableButton();
             }
         }
         

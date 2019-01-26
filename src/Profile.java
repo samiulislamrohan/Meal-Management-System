@@ -31,6 +31,7 @@ public class Profile extends JFrame implements ActionListener,MouseListener
         boolean validUserName=false;
 
         panel=new JPanel();
+        panel.setBackground(new Color(255,250,250));
         panel.setLayout(null);
         
         dashboardButton = new JButton("Dashboard");
