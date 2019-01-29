@@ -195,6 +195,7 @@ public class Login extends JFrame implements ActionListener, MouseListener{
 
                     if(password.equals(new String(passwordF.getPassword()))){
                         Dashboard dashboard = new Dashboard(username, name, statement, role);
+                        dashboard.checkInput();
                         dashboard.sync();
 
                         login.dispose();

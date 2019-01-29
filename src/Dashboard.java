@@ -12,7 +12,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
     JButton logoutBtn, profileButton, submitBtn, editBtn, dashboardButton, overviewButton, transactionButton, mealButton, manageButton;
     JTextField mealTF, paymentTF, marketTF;
     String username, name, meal, payment, marketCost;
-    double balance, totalMeal, personMeal, totalBalance, cost;
+    double balance;
     Statement statement;
     boolean checkStatement = true;
     int role;
@@ -169,19 +169,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
 
         this.add(panel);
         this.setVisible(true);
-
-        if(checkInputStatus()){
-            mealTF.setText(meal);
-            paymentTF.setText(payment);
-            marketTF.setText(marketCost);
-
-            mealTF.setEditable(false);
-            paymentTF.setEditable(false);
-            marketTF.setEditable(false);
-            submitBtn.setVisible(false);
-            editBtn.setVisible(true);
-            submitBtn.setText("Update");
-        }
     }
 
     @Override
@@ -238,70 +225,10 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
         }
 
         else if(e.getSource() == submitBtn){
-
-            if(!checkStatement){
-                this.statement = DBConnect.getStatement(this);
-                if(this.statement == null)
-                    return;
-                checkStatement = true;
-            }
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            String balanceQuery = "INSERT INTO balance VALUES('"+username+"','"+date+"','"+paymentTF.getText()+"','"+marketTF.getText()+"');";
-            String mealQuery = "INSERT INTO meal VALUES('"+username+"','"+date+"','"+mealTF.getText()+"');";
-            try{
-                statement.execute(balanceQuery);
-                statement.execute(mealQuery);
-                mealTF.setEditable(false);
-                paymentTF.setEditable(false);
-                marketTF.setEditable(false);
-                submitBtn.setText("Update");
-                submitBtn.setVisible(false);
-                editBtn.setVisible(true);
-
-                messageLabel.setText("Data successfully submitted!");
-
-                sync();
-                
-            }catch(Exception ae){
-                if(ae.getMessage().contains("Duplicate entry")){
-                    String updateBalanceQuery = "UPDATE balance SET Payment='"+paymentTF.getText()+"', MarketCost='"+marketTF.getText()+"' WHERE Username='"+username+"' AND Date='"+date+"';";
-                    String updateMealQuery = "UPDATE meal SET TotalMeal='"+mealTF.getText()+"' WHERE Username='"+username+"' AND Date='"+date+"';";
-                    try{
-                        statement.execute(updateBalanceQuery);
-                        statement.execute(updateMealQuery);
-                        mealTF.setEditable(false);
-                        paymentTF.setEditable(false);
-                        marketTF.setEditable(false);
-                        submitBtn.setVisible(false);
-                        editBtn.setVisible(true);
-
-                        messageLabel.setText("Data successfully updated!");
-
-                        sync();
-
-                    }catch(Exception iae){
-                        System.out.println(iae.getMessage());
-                    }
-                }
-                else if(ae.getMessage().contains("Communications link failure")){
-                    messageLabel.setText("Internet connection failure, check internet connection");
-                    checkStatement = false;
-                }
-                else if(ae.getMessage().contains("No operations allowed after statement closed.")){
-                    System.out.println("statementcloseExp: "+ae.getMessage());
-                    
-                }
-                else{
-                    JOptionPane.showMessageDialog(this, ae.getMessage());
-                }
-            }
-
-            if(checkStatement)
-                balance = Activity.getBalance(username, statement);
-            balanceLabel.setText("Balance: "+ balance);
+            submit(this);
+            disableInput();
         }
         else if(e.getSource() == editBtn){
-            messageLabel.setText("");
             mealTF.setEditable(true);
             paymentTF.setEditable(true);
             marketTF.setEditable(true);
@@ -310,29 +237,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
         }
     }
 
-    boolean checkInputStatus(){
-        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String query = "SELECT * FROM meal WHERE Username='"+username+"' AND Date='"+date+"';";
-        String bquery = "SELECT * FROM balance WHERE Username='"+username+"' AND Date='"+date+"';";
-        try{
-            
-            ResultSet bResultSet = statement.executeQuery(bquery);
-            boolean flag = false;
-            if(bResultSet.next()){
-                payment = bResultSet.getString("Payment");
-                marketCost = bResultSet.getString("MarketCost");
-            }
-            ResultSet resultSet = statement.executeQuery(query);
-            if(resultSet.next()){
-                meal = resultSet.getString("TotalMeal");
-                flag = true;
-            }
-            return flag;
-        }catch(Exception ae){
-            System.out.println("checkInputException: " + ae.getMessage());
-            return false;
-        } 
-    }
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -459,5 +363,113 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener{
             messageLabel.setText("");
             return null;
         }
+    }
+
+    void checkInput(){
+        if(checkInputStatus()){
+            mealTF.setText(meal);
+            paymentTF.setText(payment);
+            marketTF.setText(marketCost);
+
+            disableInput();
+
+            submitBtn.setText("Update");
+        }
+    }
+
+    boolean checkInputStatus(){
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String query = "SELECT * FROM meal WHERE Username='"+username+"' AND Date='"+date+"';";
+        String bquery = "SELECT * FROM balance WHERE Username='"+username+"' AND Date='"+date+"';";
+        try{
+
+            ResultSet bResultSet = statement.executeQuery(bquery);
+            boolean flag = false;
+            if(bResultSet.next()){
+                payment = bResultSet.getString("Payment");
+                marketCost = bResultSet.getString("MarketCost");
+            }
+            ResultSet resultSet = statement.executeQuery(query);
+            if(resultSet.next()){
+                meal = resultSet.getString("TotalMeal");
+                flag = true;
+            }
+            return flag;
+        }catch(Exception ae){
+            System.out.println("checkInputException: " + ae.getMessage());
+            return false;
+        }
+    }
+
+    void submit(Dashboard dashboard){
+        submitData submitData = new submitData(dashboard);
+        submitData.execute();
+    }
+
+    private class submitData extends SwingWorker<Object, String>{
+        Dashboard dashboard;
+        submitData(Dashboard dashboard){
+            this.dashboard = dashboard;
+        }
+        @Override
+        protected Object doInBackground() throws Exception {
+
+            if(!checkStatement){
+                dashboard.statement = DBConnect.getStatement(dashboard);
+                if(dashboard.statement == null)
+                    return null;
+                checkStatement = true;
+            }
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            String balanceQuery = "INSERT INTO balance VALUES('"+username+"','"+date+"','"+paymentTF.getText()+"','"+marketTF.getText()+"');";
+            String mealQuery = "INSERT INTO meal VALUES('"+username+"','"+date+"','"+mealTF.getText()+"');";
+            try{
+                statement.execute(balanceQuery);
+                statement.execute(mealQuery);
+
+                submitBtn.setText("Update");
+
+                messageLabel.setText("Data successfully submitted!");
+
+                sync();
+
+            }catch(Exception ae){
+                if(ae.getMessage().contains("Duplicate entry")){
+                    String updateBalanceQuery = "UPDATE balance SET Payment='"+paymentTF.getText()+"', MarketCost='"+marketTF.getText()+"' WHERE Username='"+username+"' AND Date='"+date+"';";
+                    String updateMealQuery = "UPDATE meal SET TotalMeal='"+mealTF.getText()+"' WHERE Username='"+username+"' AND Date='"+date+"';";
+                    try{
+                        statement.execute(updateBalanceQuery);
+                        statement.execute(updateMealQuery);
+
+                        messageLabel.setText("Data successfully updated!");
+
+                        sync();
+
+                    }catch(Exception iae){
+                        System.out.println(iae.getMessage());
+                    }
+                }
+                else if(ae.getMessage().contains("Communications link failure")){
+                    messageLabel.setText("Internet connection failure, check internet connection");
+                    checkStatement = false;
+                }
+                else if(ae.getMessage().contains("No operations allowed after statement closed.")){
+                    System.out.println("statement close Exp: "+ae.getMessage());
+                }
+                else{
+                    JOptionPane.showMessageDialog(dashboard, ae.getMessage());
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private void disableInput(){
+        mealTF.setEditable(false);
+        paymentTF.setEditable(false);
+        marketTF.setEditable(false);
+        submitBtn.setVisible(false);
+        editBtn.setVisible(true);
     }
 }
