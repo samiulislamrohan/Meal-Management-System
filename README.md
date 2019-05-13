@@ -10,10 +10,11 @@
 * Transaction History
 * Meal History
 * Profile menu for individual members
+* Access to all user accoutn for manager
 
 ### Download the Application
 #### For Windows:
-[Meal Management v1.1.exe]
+    [Meal Management v1.1.exe]
 
 ### Run the Application
 ``` bash
