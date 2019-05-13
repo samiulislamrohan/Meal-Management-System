@@ -13,7 +13,7 @@
 
 ### Download the Application
 #### For Windows:
-    [Meal Management v1.1.exe](https://drive.google.com/file/d/1ctNgqNEPQA25RHuHgf9aWVWs4c9L--4-/view?usp=sharing)
+    [Meal Management v1.1.exe]<https://drive.google.com/file/d/1ctNgqNEPQA25RHuHgf9aWVWs4c9L--4-/view?usp=sharing>
 
 ### Run the Application
 ``` bash
