@@ -14,7 +14,7 @@
 
 ### Download the Application
 #### For Windows:
-    [Meal Management v1.1.exe]
+[Meal Management v1.1.exe]
 
 ### Run the Application
 ``` bash
