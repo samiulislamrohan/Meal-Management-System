@@ -10,7 +10,7 @@
 * Transaction History
 * Meal History
 * Profile menu for individual members
-* Access to all user accoutn for manager
+* Access to all user account for manager
 
 ### Download the Application
 #### For Windows:
@@ -23,3 +23,6 @@ javac src/*.java
 java src.Main
 ```
 [Meal Management v1.1.exe]: https://drive.google.com/file/d/1ctNgqNEPQA25RHuHgf9aWVWs4c9L--4-/view?usp=sharing
+
+#### Project Background
+In university Object Oriented Programming 1 course, We were assigned to create a Desktop Application using Java technology. In that course, We created the Meal Management application. Our goal was to solve bachelors Meal Management problem & make it automated via the desktop application.
